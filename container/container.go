@@ -41,9 +41,6 @@ import (
 	"github.com/moby/sys/user"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 	"github.com/pkg/errors"
-	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/attribute"
-	"go.opentelemetry.io/otel/trace"
 )
 
 const (
@@ -222,11 +219,6 @@ func (container *Container) toDisk() (*Container, error) {
 // CheckpointTo makes the Container's current state visible to queries, and persists state.
 // Callers must hold a Container lock.
 func (container *Container) CheckpointTo(ctx context.Context, store *ViewDB) error {
-	ctx, span := otel.Tracer("").Start(ctx, "container.CheckpointTo", trace.WithAttributes(
-		attribute.String("container.ID", container.ID),
-		attribute.String("container.Name", container.Name)))
-	defer span.End()
-
 	deepCopy, err := container.toDisk()
 	if err != nil {
 		return err

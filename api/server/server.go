@@ -12,10 +12,7 @@ import (
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/versions"
 	"github.com/docker/docker/dockerversion"
-	"github.com/docker/docker/internal/otelutil"
 	"github.com/gorilla/mux"
-	"go.opentelemetry.io/contrib/instrumentation/net/http/otelhttp"
-	"go.opentelemetry.io/otel/baggage"
 )
 
 // versionMatcher defines a variable matcher to be parsed by the router
@@ -34,7 +31,7 @@ func (s *Server) UseMiddleware(m middleware.Middleware) {
 }
 
 func (s *Server) makeHTTPHandler(handler httputils.APIFunc, operation string) http.HandlerFunc {
-	return otelhttp.NewHandler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		// Define the context that we'll pass around to share info
 		// like the docker-request-id.
 		//
@@ -46,9 +43,7 @@ func (s *Server) makeHTTPHandler(handler httputils.APIFunc, operation string) ht
 		// use intermediate variable to prevent "should not use basic type
 		// string as key in context.WithValue" golint errors
 		ua := r.Header.Get("User-Agent")
-		ctx := baggage.ContextWithBaggage(context.WithValue(r.Context(), dockerversion.UAStringKey{}, ua), otelutil.MustNewBaggage(
-			otelutil.MustNewMemberRaw(otelutil.TriggerKey, "api"),
-		))
+		ctx := context.WithValue(r.Context(), dockerversion.UAStringKey{}, ua)
 
 		r = r.WithContext(ctx)
 		handlerFunc := s.handlerWithGlobalMiddlewares(handler)
@@ -78,7 +73,7 @@ func (s *Server) makeHTTPHandler(handler httputils.APIFunc, operation string) ht
 				})
 			}
 		}
-	}), operation).ServeHTTP
+	})
 }
 
 // CreateMux returns a new mux with all the routers registered.
