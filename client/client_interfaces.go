@@ -81,7 +81,7 @@ type ContainerAPIClient interface {
 	ContainerInspect(ctx context.Context, container string) (container.InspectResponse, error)
 	ContainerInspectWithRaw(ctx context.Context, container string, getSize bool) (container.InspectResponse, []byte, error)
 	ContainerKill(ctx context.Context, container, signal string) error
-	ContainerList(ctx context.Context, options container.ListOptions) ([]container.Summary, error)
+	ContainerList(ctx context.Context, options container.ListOptions) ([]container.SummaryTrimmed, error)
 	ContainerLogs(ctx context.Context, container string, options container.LogsOptions) (io.ReadCloser, error)
 	ContainerPause(ctx context.Context, container string) error
 	ContainerRemove(ctx context.Context, container string, options container.RemoveOptions) error

@@ -54,7 +54,7 @@ func unpauseAllContainers(ctx context.Context, t testing.TB, client client.Conta
 	}
 }
 
-func getPausedContainers(ctx context.Context, t testing.TB, client client.ContainerAPIClient) []container.Summary {
+func getPausedContainers(ctx context.Context, t testing.TB, client client.ContainerAPIClient) []container.SummaryTrimmed {
 	t.Helper()
 	containers, err := client.ContainerList(ctx, container.ListOptions{
 		Filters: filters.NewArgs(filters.Arg("status", "paused")),
@@ -89,7 +89,7 @@ func deleteAllContainers(ctx context.Context, t testing.TB, apiclient client.Con
 	}
 }
 
-func getAllContainers(ctx context.Context, t testing.TB, client client.ContainerAPIClient) []container.Summary {
+func getAllContainers(ctx context.Context, t testing.TB, client client.ContainerAPIClient) []container.SummaryTrimmed {
 	t.Helper()
 	containers, err := client.ContainerList(ctx, container.ListOptions{
 		All: true,
