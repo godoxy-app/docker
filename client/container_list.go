@@ -11,7 +11,7 @@ import (
 )
 
 // ContainerList returns the list of containers in the docker host.
-func (cli *Client) ContainerList(ctx context.Context, options container.ListOptions) ([]container.Summary, error) {
+func (cli *Client) ContainerList(ctx context.Context, options container.ListOptions) ([]container.SummaryTrimmed, error) {
 	query := url.Values{}
 
 	if options.All {
@@ -50,7 +50,11 @@ func (cli *Client) ContainerList(ctx context.Context, options container.ListOpti
 		return nil, err
 	}
 
-	var containers []container.Summary
+	var containers []container.SummaryTrimmed
 	err = json.NewDecoder(resp.Body).Decode(&containers)
-	return containers, err
+	if err != nil {
+		return nil, err
+	}
+
+	return containers, nil
 }
