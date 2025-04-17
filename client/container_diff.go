@@ -2,9 +2,9 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/container"
 )
 
@@ -22,7 +22,7 @@ func (cli *Client) ContainerDiff(ctx context.Context, containerID string) ([]con
 	}
 
 	var changes []container.FilesystemChange
-	err = json.NewDecoder(resp.Body).Decode(&changes)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&changes)
 	if err != nil {
 		return nil, err
 	}

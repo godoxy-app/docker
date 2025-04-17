@@ -3,7 +3,6 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"math/rand"
@@ -12,6 +11,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/errdefs"
@@ -98,7 +98,7 @@ func TestPlainTextError(t *testing.T) {
 // It includes test-cases for malformed and invalid error-responses, as well
 // as plain text errors for backwards compatibility with API versions <1.24.
 func TestResponseErrors(t *testing.T) {
-	errorResponse, err := json.Marshal(&types.ErrorResponse{
+	errorResponse, err := sonic.Marshal(&types.ErrorResponse{
 		Message: "Some error occurred",
 	})
 	assert.NilError(t, err)

@@ -2,10 +2,10 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/registry"
 	"github.com/docker/docker/api/types/swarm"
@@ -81,7 +81,7 @@ func (cli *Client) ServiceUpdate(ctx context.Context, serviceID string, version 
 	}
 
 	var response swarm.ServiceUpdateResponse
-	err = json.NewDecoder(resp.Body).Decode(&response)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&response)
 	if resolveWarning != "" {
 		response.Warnings = append(response.Warnings, resolveWarning)
 	}

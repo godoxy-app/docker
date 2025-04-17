@@ -3,7 +3,6 @@ package client // import "github.com/docker/docker/client"
 import (
 	"context"
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -11,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/container"
 )
 
@@ -95,7 +95,7 @@ func getContainerPathStatFromHeader(header http.Header) (container.PathStat, err
 	encodedStat := header.Get("X-Docker-Container-Path-Stat")
 	statDecoder := base64.NewDecoder(base64.StdEncoding, strings.NewReader(encodedStat))
 
-	err := json.NewDecoder(statDecoder).Decode(&stat)
+	err := sonic.ConfigDefault.NewDecoder(statDecoder).Decode(&stat)
 	if err != nil {
 		err = fmt.Errorf("unable to decode container path stat header: %s", err)
 	}

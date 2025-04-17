@@ -2,9 +2,9 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
 )
@@ -27,7 +27,7 @@ func (cli *Client) ContainersPrune(ctx context.Context, pruneFilters filters.Arg
 	}
 
 	var report container.PruneReport
-	if err := json.NewDecoder(resp.Body).Decode(&report); err != nil {
+	if err := sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&report); err != nil {
 		return container.PruneReport{}, fmt.Errorf("Error retrieving disk usage: %v", err)
 	}
 

@@ -3,7 +3,6 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -12,6 +11,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/errdefs"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
@@ -55,7 +55,7 @@ func TestImageInspect(t *testing.T) {
 			if !strings.HasPrefix(req.URL.Path, expectedURL) {
 				return nil, fmt.Errorf("Expected URL '%s', got '%s'", expectedURL, req.URL)
 			}
-			content, err := json.Marshal(image.InspectResponse{
+			content, err := sonic.Marshal(image.InspectResponse{
 				ID:       "image_id",
 				RepoTags: expectedTags,
 			})
@@ -103,7 +103,7 @@ func TestImageInspectWithPlatform(t *testing.T) {
 				return nil, fmt.Errorf("Expected platform '%s', got '%s'", expectedPlatform, platform)
 			}
 
-			content, err := json.Marshal(image.InspectResponse{
+			content, err := sonic.Marshal(image.InspectResponse{
 				ID:           "image_id",
 				Architecture: "arm64",
 				Os:           "linux",

@@ -3,11 +3,11 @@ package middleware // import "github.com/docker/docker/api/server/middleware"
 import (
 	"bufio"
 	"context"
-	"encoding/json"
 	"io"
 	"net/http"
 	"strings"
 
+	"github.com/bytedance/sonic"
 	"github.com/containerd/log"
 	"github.com/docker/docker/api/server/httpstatus"
 	"github.com/docker/docker/api/server/httputils"
@@ -62,13 +62,13 @@ func DebugRequestMiddleware(handler func(ctx context.Context, w http.ResponseWri
 		}
 
 		var postForm map[string]interface{}
-		if err := json.Unmarshal(b, &postForm); err == nil {
+		if err := sonic.Unmarshal(b, &postForm); err == nil {
 			maskSecretKeys(postForm)
 			// TODO(thaJeztah): is there a better way to detect if we're using JSON-formatted logs?
 			if _, ok := logger.Logger.Formatter.(*logrus.JSONFormatter); ok {
 				fields["form-data"] = postForm
 			} else {
-				if data, err := json.Marshal(postForm); err != nil {
+				if data, err := sonic.Marshal(postForm); err != nil {
 					fields["form-data"] = postForm
 				} else {
 					fields["form-data"] = string(data)

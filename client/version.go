@@ -2,8 +2,8 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 )
 
@@ -16,6 +16,6 @@ func (cli *Client) ServerVersion(ctx context.Context) (types.Version, error) {
 	}
 
 	var server types.Version
-	err = json.NewDecoder(resp.Body).Decode(&server)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&server)
 	return server, err
 }

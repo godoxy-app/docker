@@ -7,13 +7,14 @@ import (
 	"encoding/json"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"gotest.tools/v3/assert"
 	is "gotest.tools/v3/assert/cmp"
 )
 
 func TestServiceConfigMarshalLegacyFields(t *testing.T) {
 	t.Run("without legacy fields", func(t *testing.T) {
-		b, err := json.Marshal(&ServiceConfig{})
+		b, err := sonic.Marshal(&ServiceConfig{})
 		assert.NilError(t, err)
 		const expected = `{"IndexConfigs":null,"InsecureRegistryCIDRs":null,"Mirrors":null}`
 		assert.Check(t, is.Equal(string(b), expected), "Legacy nondistributable-artifacts fields should be omitted in output")
@@ -22,7 +23,7 @@ func TestServiceConfigMarshalLegacyFields(t *testing.T) {
 	// Legacy fields should be returned when set to an empty slice. This is
 	// used for API versions < 1.49.
 	t.Run("with legacy fields", func(t *testing.T) {
-		b, err := json.Marshal(&ServiceConfig{
+		b, err := sonic.Marshal(&ServiceConfig{
 			ExtraFields: map[string]any{
 				"AllowNondistributableArtifactsCIDRs":     json.RawMessage(nil),
 				"AllowNondistributableArtifactsHostnames": json.RawMessage(nil),

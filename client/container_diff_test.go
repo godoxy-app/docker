@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/errdefs"
 	"gotest.tools/v3/assert"
@@ -55,7 +55,7 @@ func TestContainerDiff(t *testing.T) {
 			if !strings.HasPrefix(req.URL.Path, expectedURL) {
 				return nil, fmt.Errorf("expected URL '%s', got '%s'", expectedURL, req.URL)
 			}
-			b, err := json.Marshal(expected)
+			b, err := sonic.Marshal(expected)
 			if err != nil {
 				return nil, err
 			}

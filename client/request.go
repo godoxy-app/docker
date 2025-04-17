@@ -3,7 +3,6 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net"
@@ -13,6 +12,7 @@ import (
 	"reflect"
 	"strings"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/versions"
 	"github.com/docker/docker/errdefs"
@@ -71,7 +71,7 @@ func encodeBody(obj interface{}, headers http.Header) (io.Reader, http.Header, e
 		return nil, headers, nil
 	}
 	// encoding/json encodes a nil pointer as the JSON document `null`,
-	// irrespective of whether the type implements json.Marshaler or encoding.TextMarshaler.
+	// irrespective of whether the type implements sonic.Marshaler or encoding.TextMarshaler.
 	// That is almost certainly not what the caller intended as the request body.
 	if reflect.TypeOf(obj).Kind() == reflect.Ptr && reflect.ValueOf(obj).IsNil() {
 		return nil, headers, nil
@@ -239,7 +239,7 @@ func (cli *Client) checkResponseErr(serverResp *http.Response) (retErr error) {
 	var daemonErr error
 	if serverResp.Header.Get("Content-Type") == "application/json" {
 		var errorResponse types.ErrorResponse
-		if err := json.Unmarshal(body, &errorResponse); err != nil {
+		if err := sonic.Unmarshal(body, &errorResponse); err != nil {
 			return errors.Wrap(err, "Error reading JSON")
 		}
 		if errorResponse.Message == "" {
@@ -249,7 +249,7 @@ func (cli *Client) checkResponseErr(serverResp *http.Response) (retErr error) {
 			// the response was valid JSON, but not with the expected schema
 			// ([types.ErrorResponse]).
 			//
-			// We cannot use "strict" JSON handling (json.NewDecoder with DisallowUnknownFields)
+			// We cannot use "strict" JSON handling (sonic.ConfigDefault.NewDecoder with DisallowUnknownFields)
 			// due to the API using an open schema (we must anticipate fields
 			// being added to [types.ErrorResponse] in the future, and not
 			// reject those responses.
@@ -303,7 +303,7 @@ func (cli *Client) addHeaders(req *http.Request, headers http.Header) *http.Requ
 func encodeData(data interface{}) (*bytes.Buffer, error) {
 	params := bytes.NewBuffer(nil)
 	if data != nil {
-		if err := json.NewEncoder(params).Encode(data); err != nil {
+		if err := sonic.ConfigDefault.NewEncoder(params).Encode(data); err != nil {
 			return nil, err
 		}
 	}

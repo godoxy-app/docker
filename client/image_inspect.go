@@ -3,11 +3,11 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/image"
 )
 
@@ -59,7 +59,7 @@ func (cli *Client) ImageInspect(ctx context.Context, imageID string, inspectOpts
 	}
 
 	var response image.InspectResponse
-	err = json.Unmarshal(buf.Bytes(), &response)
+	err = sonic.Unmarshal(buf.Bytes(), &response)
 	return response, err
 }
 

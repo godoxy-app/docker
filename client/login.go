@@ -2,9 +2,9 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/registry"
 )
 
@@ -19,6 +19,6 @@ func (cli *Client) RegistryLogin(ctx context.Context, auth registry.AuthConfig) 
 	}
 
 	var response registry.AuthenticateOKBody
-	err = json.NewDecoder(resp.Body).Decode(&response)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&response)
 	return response, err
 }

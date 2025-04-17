@@ -2,8 +2,8 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 )
 
@@ -16,6 +16,6 @@ func (cli *Client) SwarmGetUnlockKey(ctx context.Context) (types.SwarmUnlockKeyR
 	}
 
 	var response types.SwarmUnlockKeyResponse
-	err = json.NewDecoder(resp.Body).Decode(&response)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&response)
 	return response, err
 }

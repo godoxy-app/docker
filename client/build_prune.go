@@ -2,10 +2,10 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"net/url"
 	"strconv"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/pkg/errors"
@@ -48,7 +48,7 @@ func (cli *Client) BuildCachePrune(ctx context.Context, opts types.BuildCachePru
 	}
 
 	report := types.BuildCachePruneReport{}
-	if err := json.NewDecoder(resp.Body).Decode(&report); err != nil {
+	if err := sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&report); err != nil {
 		return nil, errors.Wrap(err, "error retrieving disk usage")
 	}
 

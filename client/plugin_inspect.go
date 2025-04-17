@@ -3,9 +3,9 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"io"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 )
 
@@ -27,6 +27,6 @@ func (cli *Client) PluginInspectWithRaw(ctx context.Context, name string) (*type
 	}
 	var p types.Plugin
 	rdr := bytes.NewReader(body)
-	err = json.NewDecoder(rdr).Decode(&p)
+	err = sonic.ConfigDefault.NewDecoder(rdr).Decode(&p)
 	return &p, body, err
 }

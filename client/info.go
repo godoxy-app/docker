@@ -2,10 +2,10 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/system"
 )
 
@@ -18,7 +18,7 @@ func (cli *Client) Info(ctx context.Context) (system.Info, error) {
 		return info, err
 	}
 
-	if err := json.NewDecoder(resp.Body).Decode(&info); err != nil {
+	if err := sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&info); err != nil {
 		return info, fmt.Errorf("Error reading remote info: %v", err)
 	}
 

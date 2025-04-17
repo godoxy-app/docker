@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/versions"
 )
@@ -71,7 +72,7 @@ func (cli *Client) ContainerWait(ctx context.Context, containerID string, condit
 		stream := io.TeeReader(resp.Body, responseText)
 
 		var res container.WaitResponse
-		if err := json.NewDecoder(stream).Decode(&res); err != nil {
+		if err := sonic.ConfigDefault.NewDecoder(stream).Decode(&res); err != nil {
 			// NOTE(nicks): The /wait API does not work well with HTTP proxies.
 			// At any time, the proxy could cut off the response stream.
 			//
@@ -110,7 +111,7 @@ func (cli *Client) legacyContainerWait(ctx context.Context, containerID string) 
 		defer ensureReaderClosed(resp)
 
 		var res container.WaitResponse
-		if err := json.NewDecoder(resp.Body).Decode(&res); err != nil {
+		if err := sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&res); err != nil {
 			errC <- err
 			return
 		}

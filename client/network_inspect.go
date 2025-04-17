@@ -3,10 +3,10 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"io"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/network"
 )
 
@@ -42,6 +42,6 @@ func (cli *Client) NetworkInspectWithRaw(ctx context.Context, networkID string, 
 	}
 
 	var nw network.Inspect
-	err = json.NewDecoder(bytes.NewReader(raw)).Decode(&nw)
+	err = sonic.ConfigDefault.NewDecoder(bytes.NewReader(raw)).Decode(&nw)
 	return nw, raw, err
 }

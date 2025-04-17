@@ -2,10 +2,11 @@ package registry // import "github.com/docker/docker/api/types/registry"
 import (
 	"context"
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"io"
 	"strings"
+
+	"github.com/bytedance/sonic"
 )
 
 // AuthHeader is the name of the header used to send encoded registry
@@ -50,7 +51,7 @@ type AuthConfig struct {
 //
 // [RFC4648, section 5]: https://tools.ietf.org/html/rfc4648#section-5
 func EncodeAuthConfig(authConfig AuthConfig) (string, error) {
-	buf, err := json.Marshal(authConfig)
+	buf, err := sonic.Marshal(authConfig)
 	if err != nil {
 		return "", errInvalidParameter{err}
 	}
@@ -88,7 +89,7 @@ func DecodeAuthConfigBody(rdr io.ReadCloser) (*AuthConfig, error) {
 
 func decodeAuthConfigFromReader(rdr io.Reader) (*AuthConfig, error) {
 	authConfig := &AuthConfig{}
-	if err := json.NewDecoder(rdr).Decode(authConfig); err != nil {
+	if err := sonic.ConfigDefault.NewDecoder(rdr).Decode(authConfig); err != nil {
 		// always return an (empty) AuthConfig to increase compatibility with
 		// the existing API.
 		return &AuthConfig{}, invalid(err)

@@ -2,11 +2,11 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"io"
 	"net/http"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/distribution/reference"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/registry"
@@ -98,7 +98,7 @@ func (cli *Client) checkPluginPermissions(ctx context.Context, query url.Values,
 	}
 
 	var privileges types.PluginPrivileges
-	if err := json.NewDecoder(resp.Body).Decode(&privileges); err != nil {
+	if err := sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&privileges); err != nil {
 		ensureReaderClosed(resp)
 		return nil, err
 	}

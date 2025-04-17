@@ -2,9 +2,9 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/swarm"
@@ -30,6 +30,6 @@ func (cli *Client) TaskList(ctx context.Context, options types.TaskListOptions) 
 	}
 
 	var tasks []swarm.Task
-	err = json.NewDecoder(resp.Body).Decode(&tasks)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&tasks)
 	return tasks, err
 }

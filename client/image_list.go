@@ -2,9 +2,9 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/api/types/versions"
@@ -62,6 +62,6 @@ func (cli *Client) ImageList(ctx context.Context, options image.ListOptions) ([]
 		return images, err
 	}
 
-	err = json.NewDecoder(resp.Body).Decode(&images)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&images)
 	return images, err
 }

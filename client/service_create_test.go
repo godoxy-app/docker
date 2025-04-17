@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 	registrytypes "github.com/docker/docker/api/types/registry"
 	"github.com/docker/docker/api/types/swarm"
@@ -50,7 +50,7 @@ func TestServiceCreate(t *testing.T) {
 			if req.Method != http.MethodPost {
 				return nil, fmt.Errorf("expected POST method, got %s", req.Method)
 			}
-			b, err := json.Marshal(swarm.ServiceCreateResponse{
+			b, err := sonic.Marshal(swarm.ServiceCreateResponse{
 				ID: "service_id",
 			})
 			if err != nil {
@@ -80,7 +80,7 @@ func TestServiceCreateCompatiblePlatforms(t *testing.T) {
 				var serviceSpec swarm.ServiceSpec
 
 				// check if the /distribution endpoint returned correct output
-				err := json.NewDecoder(req.Body).Decode(&serviceSpec)
+				err := sonic.ConfigDefault.NewDecoder(req.Body).Decode(&serviceSpec)
 				if err != nil {
 					return nil, err
 				}
@@ -89,7 +89,7 @@ func TestServiceCreateCompatiblePlatforms(t *testing.T) {
 				assert.Check(t, is.Len(serviceSpec.TaskTemplate.Placement.Platforms, 1))
 
 				p := serviceSpec.TaskTemplate.Placement.Platforms[0]
-				b, err := json.Marshal(swarm.ServiceCreateResponse{
+				b, err := sonic.Marshal(swarm.ServiceCreateResponse{
 					ID: "service_" + p.OS + "_" + p.Architecture,
 				})
 				if err != nil {
@@ -100,7 +100,7 @@ func TestServiceCreateCompatiblePlatforms(t *testing.T) {
 					Body:       io.NopCloser(bytes.NewReader(b)),
 				}, nil
 			} else if strings.HasPrefix(req.URL.Path, "/v1.30/distribution/") {
-				b, err := json.Marshal(registrytypes.DistributionInspect{
+				b, err := sonic.Marshal(registrytypes.DistributionInspect{
 					Descriptor: ocispec.Descriptor{
 						Digest: "sha256:c0537ff6a5218ef531ece93d4984efc99bbf3f7497c0a7726c88e2bb7584dc96",
 					},
@@ -160,12 +160,12 @@ func TestServiceCreateDigestPinning(t *testing.T) {
 				// reset and set image received by the service create endpoint
 				serviceCreateImage = ""
 				var service swarm.ServiceSpec
-				if err := json.NewDecoder(req.Body).Decode(&service); err != nil {
+				if err := sonic.ConfigDefault.NewDecoder(req.Body).Decode(&service); err != nil {
 					return nil, fmt.Errorf("could not parse service create request")
 				}
 				serviceCreateImage = service.TaskTemplate.ContainerSpec.Image
 
-				b, err := json.Marshal(swarm.ServiceCreateResponse{
+				b, err := sonic.Marshal(swarm.ServiceCreateResponse{
 					ID: "service_id",
 				})
 				if err != nil {
@@ -180,7 +180,7 @@ func TestServiceCreateDigestPinning(t *testing.T) {
 				return nil, fmt.Errorf("cannot resolve image")
 			} else if strings.HasPrefix(req.URL.Path, "/v1.30/distribution/") {
 				// resolvable images
-				b, err := json.Marshal(registrytypes.DistributionInspect{
+				b, err := sonic.Marshal(registrytypes.DistributionInspect{
 					Descriptor: ocispec.Descriptor{
 						Digest: digest.Digest(dgst),
 					},

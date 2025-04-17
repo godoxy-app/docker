@@ -3,9 +3,9 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"io"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/volume"
 )
 
@@ -35,6 +35,6 @@ func (cli *Client) VolumeInspectWithRaw(ctx context.Context, volumeID string) (v
 
 	var vol volume.Volume
 	rdr := bytes.NewReader(body)
-	err = json.NewDecoder(rdr).Decode(&vol)
+	err = sonic.ConfigDefault.NewDecoder(rdr).Decode(&vol)
 	return vol, body, err
 }

@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/errdefs"
 	"gotest.tools/v3/assert"
@@ -48,7 +48,7 @@ func TestNetworkConnectEmptyNilEndpointSettings(t *testing.T) {
 			}
 
 			var connect network.ConnectOptions
-			if err := json.NewDecoder(req.Body).Decode(&connect); err != nil {
+			if err := sonic.ConfigDefault.NewDecoder(req.Body).Decode(&connect); err != nil {
 				return nil, err
 			}
 
@@ -87,7 +87,7 @@ func TestNetworkConnect(t *testing.T) {
 			}
 
 			var connect network.ConnectOptions
-			if err := json.NewDecoder(req.Body).Decode(&connect); err != nil {
+			if err := sonic.ConfigDefault.NewDecoder(req.Body).Decode(&connect); err != nil {
 				return nil, err
 			}
 

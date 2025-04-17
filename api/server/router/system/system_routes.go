@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/bytedance/sonic"
 	"github.com/containerd/log"
 	"github.com/docker/docker/api/server/httputils"
 	"github.com/docker/docker/api/server/router/build"
@@ -294,7 +295,7 @@ func (s *systemRouter) getEvents(ctx context.Context, w http.ResponseWriter, r *
 	defer output.Close()
 	output.Flush()
 
-	enc := json.NewEncoder(output)
+	enc := sonic.ConfigDefault.NewEncoder(output)
 
 	buffered, l := s.backend.SubscribeToEvents(since, until, ef)
 	defer s.backend.UnsubscribeFromEvents(l)
@@ -345,7 +346,7 @@ func (s *systemRouter) getEvents(ctx context.Context, w http.ResponseWriter, r *
 
 func (s *systemRouter) postAuth(ctx context.Context, w http.ResponseWriter, r *http.Request, vars map[string]string) error {
 	var config *registry.AuthConfig
-	err := json.NewDecoder(r.Body).Decode(&config)
+	err := sonic.ConfigDefault.NewDecoder(r.Body).Decode(&config)
 	r.Body.Close()
 	if err != nil {
 		return err

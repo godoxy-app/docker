@@ -3,9 +3,9 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"io"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/swarm"
 )
 
@@ -29,6 +29,6 @@ func (cli *Client) TaskInspectWithRaw(ctx context.Context, taskID string) (swarm
 
 	var response swarm.Task
 	rdr := bytes.NewReader(body)
-	err = json.NewDecoder(rdr).Decode(&response)
+	err = sonic.ConfigDefault.NewDecoder(rdr).Decode(&response)
 	return response, body, err
 }

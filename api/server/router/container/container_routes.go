@@ -2,7 +2,6 @@ package container // import "github.com/docker/docker/api/server/router/containe
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -10,6 +9,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/bytedance/sonic"
 	"github.com/containerd/log"
 	"github.com/containerd/platforms"
 	"github.com/docker/docker/api/server/httpstatus"
@@ -388,7 +388,7 @@ func (c *containerRouter) postContainersWait(ctx context.Context, w http.Respons
 		waitError = &container.WaitExitError{Message: status.Err().Error()}
 	}
 
-	return json.NewEncoder(w).Encode(&container.WaitResponse{
+	return sonic.ConfigDefault.NewEncoder(w).Encode(&container.WaitResponse{
 		StatusCode: int64(status.ExitCode()),
 		Error:      waitError,
 	})

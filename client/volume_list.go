@@ -2,9 +2,9 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/volume"
 )
@@ -28,6 +28,6 @@ func (cli *Client) VolumeList(ctx context.Context, options volume.ListOptions) (
 	}
 
 	var volumes volume.ListResponse
-	err = json.NewDecoder(resp.Body).Decode(&volumes)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&volumes)
 	return volumes, err
 }

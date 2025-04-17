@@ -5,7 +5,6 @@ import (
 	"bytes"
 	"context"
 	"encoding/base64"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -15,6 +14,7 @@ import (
 	"sync"
 	"syscall"
 
+	"github.com/bytedance/sonic"
 	"github.com/containerd/log"
 	"github.com/docker/docker/api/server/httputils"
 	"github.com/docker/docker/api/types"
@@ -82,7 +82,7 @@ func newImageBuildOptions(ctx context.Context, r *http.Request) (*types.ImageBui
 		outputsJSON := r.FormValue("outputs")
 		if outputsJSON != "" {
 			var outputs []types.ImageBuildOutput
-			if err := json.Unmarshal([]byte(outputsJSON), &outputs); err != nil {
+			if err := sonic.Unmarshal([]byte(outputsJSON), &outputs); err != nil {
 				return nil, invalidParam{errors.Wrap(err, "invalid outputs specified")}
 			}
 			options.Outputs = outputs
@@ -106,7 +106,7 @@ func newImageBuildOptions(ctx context.Context, r *http.Request) (*types.ImageBui
 
 	if ulimitsJSON := r.FormValue("ulimits"); ulimitsJSON != "" {
 		buildUlimits := []*container.Ulimit{}
-		if err := json.Unmarshal([]byte(ulimitsJSON), &buildUlimits); err != nil {
+		if err := sonic.Unmarshal([]byte(ulimitsJSON), &buildUlimits); err != nil {
 			return nil, invalidParam{errors.Wrap(err, "error reading ulimit settings")}
 		}
 		options.Ulimits = buildUlimits
@@ -126,7 +126,7 @@ func newImageBuildOptions(ctx context.Context, r *http.Request) (*types.ImageBui
 	// no "ARG foo" in the Dockerfile.
 	if buildArgsJSON := r.FormValue("buildargs"); buildArgsJSON != "" {
 		buildArgs := map[string]*string{}
-		if err := json.Unmarshal([]byte(buildArgsJSON), &buildArgs); err != nil {
+		if err := sonic.Unmarshal([]byte(buildArgsJSON), &buildArgs); err != nil {
 			return nil, invalidParam{errors.Wrap(err, "error reading build args")}
 		}
 		options.BuildArgs = buildArgs
@@ -134,7 +134,7 @@ func newImageBuildOptions(ctx context.Context, r *http.Request) (*types.ImageBui
 
 	if labelsJSON := r.FormValue("labels"); labelsJSON != "" {
 		labels := map[string]string{}
-		if err := json.Unmarshal([]byte(labelsJSON), &labels); err != nil {
+		if err := sonic.Unmarshal([]byte(labelsJSON), &labels); err != nil {
 			return nil, invalidParam{errors.Wrap(err, "error reading labels")}
 		}
 		options.Labels = labels
@@ -142,7 +142,7 @@ func newImageBuildOptions(ctx context.Context, r *http.Request) (*types.ImageBui
 
 	if cacheFromJSON := r.FormValue("cachefrom"); cacheFromJSON != "" {
 		cacheFrom := []string{}
-		if err := json.Unmarshal([]byte(cacheFromJSON), &cacheFrom); err != nil {
+		if err := sonic.Unmarshal([]byte(cacheFromJSON), &cacheFrom); err != nil {
 			return nil, invalidParam{errors.Wrap(err, "error reading cache-from")}
 		}
 		options.CacheFrom = cacheFrom
@@ -343,7 +343,7 @@ func getAuthConfigs(header http.Header) map[string]registry.AuthConfig {
 	authConfigsJSON := base64.NewDecoder(base64.URLEncoding, strings.NewReader(authConfigsEncoded))
 	// Pulling an image does not error when no auth is provided so to remain
 	// consistent with the existing api decode errors are ignored
-	_ = json.NewDecoder(authConfigsJSON).Decode(&authConfigs)
+	_ = sonic.ConfigDefault.NewDecoder(authConfigsJSON).Decode(&authConfigs)
 	return authConfigs
 }
 

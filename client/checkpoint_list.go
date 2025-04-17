@@ -2,9 +2,9 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/checkpoint"
 )
 
@@ -23,6 +23,6 @@ func (cli *Client) CheckpointList(ctx context.Context, container string, options
 		return checkpoints, err
 	}
 
-	err = json.NewDecoder(resp.Body).Decode(&checkpoints)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&checkpoints)
 	return checkpoints, err
 }

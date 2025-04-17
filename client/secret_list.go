@@ -2,9 +2,9 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/swarm"
@@ -33,6 +33,6 @@ func (cli *Client) SecretList(ctx context.Context, options types.SecretListOptio
 	}
 
 	var secrets []swarm.Secret
-	err = json.NewDecoder(resp.Body).Decode(&secrets)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&secrets)
 	return secrets, err
 }

@@ -2,10 +2,10 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"bytes"
-	"encoding/json"
 	"io"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 )
 
@@ -40,7 +40,7 @@ func errorMock(statusCode int, message string) func(req *http.Request) (*http.Re
 		header := http.Header{}
 		header.Set("Content-Type", "application/json")
 
-		body, err := json.Marshal(&types.ErrorResponse{
+		body, err := sonic.Marshal(&types.ErrorResponse{
 			Message: message,
 		})
 		if err != nil {

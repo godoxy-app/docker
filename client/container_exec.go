@@ -2,9 +2,9 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/versions"
@@ -40,7 +40,7 @@ func (cli *Client) ContainerExecCreate(ctx context.Context, containerID string, 
 	}
 
 	var response container.ExecCreateResponse
-	err = json.NewDecoder(resp.Body).Decode(&response)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&response)
 	return response, err
 }
 
@@ -75,7 +75,7 @@ func (cli *Client) ContainerExecInspect(ctx context.Context, execID string) (con
 		return response, err
 	}
 
-	err = json.NewDecoder(resp.Body).Decode(&response)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&response)
 	ensureReaderClosed(resp)
 	return response, err
 }

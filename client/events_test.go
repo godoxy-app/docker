@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/events"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/errdefs"
@@ -128,7 +128,7 @@ func TestEvents(t *testing.T) {
 				buffer := new(bytes.Buffer)
 
 				for _, e := range eventsCase.events {
-					b, _ := json.Marshal(e)
+					b, _ := sonic.Marshal(e)
 					buffer.Write(b)
 				}
 

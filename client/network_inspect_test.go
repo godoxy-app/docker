@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/errdefs"
 	"gotest.tools/v3/assert"
@@ -46,12 +46,12 @@ func TestNetworkInspect(t *testing.T) {
 				s := map[string]network.ServiceInfo{
 					"web": {},
 				}
-				content, err = json.Marshal(network.Inspect{
+				content, err = sonic.Marshal(network.Inspect{
 					Name:     "mynetwork",
 					Services: s,
 				})
 			} else {
-				content, err = json.Marshal(network.Inspect{
+				content, err = sonic.Marshal(network.Inspect{
 					Name: "mynetwork",
 				})
 			}

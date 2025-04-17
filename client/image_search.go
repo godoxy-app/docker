@@ -2,11 +2,11 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 	"net/url"
 	"strconv"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/registry"
 	"github.com/docker/docker/errdefs"
@@ -43,7 +43,7 @@ func (cli *Client) ImageSearch(ctx context.Context, term string, options registr
 		return results, err
 	}
 
-	err = json.NewDecoder(resp.Body).Decode(&results)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&results)
 	return results, err
 }
 

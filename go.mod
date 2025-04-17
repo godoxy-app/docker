@@ -24,6 +24,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.16.11
 	github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs v1.32.0
 	github.com/aws/smithy-go v1.20.3
+	github.com/bytedance/sonic v1.13.2
 	github.com/cloudflare/cfssl v1.6.4
 	github.com/containerd/cgroups/v3 v3.0.5
 	github.com/containerd/containerd/api v1.8.0
@@ -117,6 +118,14 @@ require (
 	gotest.tools/v3 v3.5.2
 	resenje.org/singleflight v0.4.3
 	tags.cncf.io/container-device-interface v1.0.1
+)
+
+require (
+	github.com/bytedance/sonic/loader v0.2.4 // indirect
+	github.com/cloudwego/base64x v0.1.5 // indirect
+	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
+	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
+	golang.org/x/arch v0.0.0-20210923205945-b76863e36670 // indirect
 )
 
 require (

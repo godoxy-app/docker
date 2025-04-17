@@ -5,10 +5,10 @@ multiple values.
 package filters // import "github.com/docker/docker/api/types/filters"
 
 import (
-	"encoding/json"
 	"regexp"
 	"strings"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/versions"
 )
 
@@ -51,7 +51,7 @@ func (args Args) MarshalJSON() ([]byte, error) {
 	if len(args.fields) == 0 {
 		return []byte("{}"), nil
 	}
-	return json.Marshal(args.fields)
+	return sonic.Marshal(args.fields)
 }
 
 // ToJSON returns the Args as a JSON encoded string
@@ -59,7 +59,7 @@ func ToJSON(a Args) (string, error) {
 	if a.Len() == 0 {
 		return "", nil
 	}
-	buf, err := json.Marshal(a)
+	buf, err := sonic.Marshal(a)
 	return string(buf), err
 }
 
@@ -74,7 +74,7 @@ func ToParamWithVersion(version string, a Args) (string, error) {
 	}
 
 	if version != "" && versions.LessThan(version, "1.22") {
-		buf, err := json.Marshal(convertArgsToSlice(a.fields))
+		buf, err := sonic.Marshal(convertArgsToSlice(a.fields))
 		return string(buf), err
 	}
 
@@ -90,14 +90,14 @@ func FromJSON(p string) (Args, error) {
 	}
 
 	raw := []byte(p)
-	err := json.Unmarshal(raw, &args)
+	err := sonic.Unmarshal(raw, &args)
 	if err == nil {
 		return args, nil
 	}
 
 	// Fallback to parsing arguments in the legacy slice format
 	deprecated := map[string][]string{}
-	if legacyErr := json.Unmarshal(raw, &deprecated); legacyErr != nil {
+	if legacyErr := sonic.Unmarshal(raw, &deprecated); legacyErr != nil {
 		return args, &invalidFilter{}
 	}
 
@@ -107,7 +107,7 @@ func FromJSON(p string) (Args, error) {
 
 // UnmarshalJSON populates the Args from JSON encode bytes
 func (args Args) UnmarshalJSON(raw []byte) error {
-	return json.Unmarshal(raw, &args.fields)
+	return sonic.Unmarshal(raw, &args.fields)
 }
 
 // Get returns the list of values associated with the key

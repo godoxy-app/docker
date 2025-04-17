@@ -1,12 +1,12 @@
 package httputils // import "github.com/docker/docker/api/server/httputils"
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strconv"
 	"strings"
 
+	"github.com/bytedance/sonic"
 	"github.com/distribution/reference"
 	"github.com/docker/docker/errdefs"
 	"github.com/pkg/errors"
@@ -142,7 +142,7 @@ func ArchiveFormValues(r *http.Request, vars map[string]string) (ArchiveOptions,
 func DecodePlatform(platformJSON string) (*ocispec.Platform, error) {
 	var p ocispec.Platform
 
-	if err := json.Unmarshal([]byte(platformJSON), &p); err != nil {
+	if err := sonic.Unmarshal([]byte(platformJSON), &p); err != nil {
 		return nil, errdefs.InvalidParameter(errors.Wrap(err, "failed to parse platform"))
 	}
 

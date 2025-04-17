@@ -1,15 +1,16 @@
 package types // import "github.com/docker/docker/api/types"
 
 import (
-	"encoding/json"
 	"fmt"
 	"sort"
+
+	"github.com/bytedance/sonic"
 )
 
 // PluginsListResponse contains the response for the Engine API
 type PluginsListResponse []*Plugin
 
-// UnmarshalJSON implements json.Unmarshaler for PluginInterfaceType
+// UnmarshalJSON implements sonic.Unmarshaler for PluginInterfaceType
 func (t *PluginInterfaceType) UnmarshalJSON(p []byte) error {
 	versionIndex := len(p)
 	prefixIndex := 0
@@ -35,9 +36,9 @@ loop:
 	return nil
 }
 
-// MarshalJSON implements json.Marshaler for PluginInterfaceType
+// MarshalJSON implements sonic.Marshaler for PluginInterfaceType
 func (t *PluginInterfaceType) MarshalJSON() ([]byte, error) {
-	return json.Marshal(t.String())
+	return sonic.Marshal(t.String())
 }
 
 // String implements fmt.Stringer for PluginInterfaceType

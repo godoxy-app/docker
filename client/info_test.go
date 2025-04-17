@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/system"
 	"github.com/docker/docker/errdefs"
 	"gotest.tools/v3/assert"
@@ -50,7 +50,7 @@ func TestInfo(t *testing.T) {
 				ID:         "daemonID",
 				Containers: 3,
 			}
-			b, err := json.Marshal(info)
+			b, err := sonic.Marshal(info)
 			if err != nil {
 				return nil, err
 			}

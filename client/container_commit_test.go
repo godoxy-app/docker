@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/errdefs"
 	"gotest.tools/v3/assert"
@@ -78,7 +78,7 @@ func TestContainerCommit(t *testing.T) {
 			if len(changes) != len(expectedChanges) {
 				return nil, fmt.Errorf("expected container changes size to be '%d', got %d", len(expectedChanges), len(changes))
 			}
-			b, err := json.Marshal(container.CommitResponse{
+			b, err := sonic.Marshal(container.CommitResponse{
 				ID: "new_container_id",
 			})
 			if err != nil {

@@ -2,13 +2,13 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"net/url"
 	"path"
 	"sort"
 	"strings"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/api/types/versions"
@@ -99,7 +99,7 @@ func (cli *Client) ContainerCreate(ctx context.Context, config *container.Config
 		return response, err
 	}
 
-	err = json.NewDecoder(resp.Body).Decode(&response)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&response)
 	return response, err
 }
 

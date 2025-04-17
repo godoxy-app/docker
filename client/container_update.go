@@ -2,8 +2,8 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/container"
 )
 
@@ -21,6 +21,6 @@ func (cli *Client) ContainerUpdate(ctx context.Context, containerID string, upda
 	}
 
 	var response container.UpdateResponse
-	err = json.NewDecoder(resp.Body).Decode(&response)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&response)
 	return response, err
 }

@@ -2,10 +2,10 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"net/url"
 	"strings"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/container"
 )
 
@@ -28,6 +28,6 @@ func (cli *Client) ContainerTop(ctx context.Context, containerID string, argumen
 	}
 
 	var response container.TopResponse
-	err = json.NewDecoder(resp.Body).Decode(&response)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&response)
 	return response, err
 }

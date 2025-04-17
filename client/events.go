@@ -2,10 +2,10 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"net/url"
 	"time"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/events"
 	"github.com/docker/docker/api/types/filters"
 	timetypes "github.com/docker/docker/api/types/time"
@@ -38,7 +38,7 @@ func (cli *Client) Events(ctx context.Context, options events.ListOptions) (<-ch
 		}
 		defer resp.Body.Close()
 
-		decoder := json.NewDecoder(resp.Body)
+		decoder := sonic.ConfigDefault.NewDecoder(resp.Body)
 
 		close(started)
 		for {

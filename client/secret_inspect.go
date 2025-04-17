@@ -3,9 +3,9 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"io"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/swarm"
 )
 
@@ -31,7 +31,7 @@ func (cli *Client) SecretInspectWithRaw(ctx context.Context, id string) (swarm.S
 
 	var secret swarm.Secret
 	rdr := bytes.NewReader(body)
-	err = json.NewDecoder(rdr).Decode(&secret)
+	err = sonic.ConfigDefault.NewDecoder(rdr).Decode(&secret)
 
 	return secret, body, err
 }

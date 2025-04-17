@@ -3,7 +3,6 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -11,6 +10,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/volume"
 	"github.com/docker/docker/errdefs"
 	"gotest.tools/v3/assert"
@@ -66,7 +66,7 @@ func TestVolumeInspect(t *testing.T) {
 			if req.Method != http.MethodGet {
 				return nil, fmt.Errorf("expected GET method, got %s", req.Method)
 			}
-			content, err := json.Marshal(expected)
+			content, err := sonic.Marshal(expected)
 			if err != nil {
 				return nil, err
 			}

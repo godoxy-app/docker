@@ -2,10 +2,10 @@ package distribution // import "github.com/docker/docker/api/server/router/distr
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 	"os"
 
+	"github.com/bytedance/sonic"
 	"github.com/distribution/reference"
 	"github.com/docker/distribution"
 	"github.com/docker/distribution/manifest/manifestlist"
@@ -149,7 +149,7 @@ func (s *distributionRouter) fetchManifest(ctx context.Context, distrepo distrib
 		configJSON, err := blobStore.Get(ctx, mnfstObj.Config.Digest)
 		var platform ocispec.Platform
 		if err == nil {
-			err := json.Unmarshal(configJSON, &platform)
+			err := sonic.Unmarshal(configJSON, &platform)
 			if err == nil && (platform.OS != "" || platform.Architecture != "") {
 				distributionInspect.Platforms = append(distributionInspect.Platforms, platform)
 			}

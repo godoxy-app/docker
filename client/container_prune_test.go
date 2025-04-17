@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/errdefs"
@@ -93,7 +93,7 @@ func TestContainersPrune(t *testing.T) {
 					actual := query.Get(key)
 					assert.Check(t, is.Equal(expected, actual))
 				}
-				content, err := json.Marshal(container.PruneReport{
+				content, err := sonic.Marshal(container.PruneReport{
 					ContainersDeleted: []string{"container_id1", "container_id2"},
 					SpaceReclaimed:    9999,
 				})

@@ -3,10 +3,10 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"io"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/container"
 )
 
@@ -24,7 +24,7 @@ func (cli *Client) ContainerInspect(ctx context.Context, containerID string) (co
 	}
 
 	var response container.InspectResponse
-	err = json.NewDecoder(resp.Body).Decode(&response)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&response)
 	return response, err
 }
 
@@ -52,6 +52,6 @@ func (cli *Client) ContainerInspectWithRaw(ctx context.Context, containerID stri
 
 	var response container.InspectResponse
 	rdr := bytes.NewReader(body)
-	err = json.NewDecoder(rdr).Decode(&response)
+	err = sonic.ConfigDefault.NewDecoder(rdr).Decode(&response)
 	return response, body, err
 }

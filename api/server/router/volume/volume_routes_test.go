@@ -3,13 +3,13 @@ package volume
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http/httptest"
 	"testing"
 
 	"gotest.tools/v3/assert"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/server/httputils"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/volume"
@@ -127,7 +127,7 @@ func TestListVolumes(t *testing.T) {
 
 	resp, err := callListVolumes(v)
 	assert.NilError(t, err)
-	d := json.NewDecoder(resp.Result().Body)
+	d := sonic.ConfigDefault.NewDecoder(resp.Result().Body)
 	respVols := volume.ListResponse{}
 	assert.NilError(t, d.Decode(&respVols))
 
@@ -164,7 +164,7 @@ func TestListVolumesNoManager(t *testing.T) {
 	resp, err := callListVolumes(v)
 	assert.NilError(t, err)
 
-	d := json.NewDecoder(resp.Result().Body)
+	d := sonic.ConfigDefault.NewDecoder(resp.Result().Body)
 	respVols := volume.ListResponse{}
 	assert.NilError(t, d.Decode(&respVols))
 
@@ -189,7 +189,7 @@ func TestCreateRegularVolume(t *testing.T) {
 	}
 
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(volumeCreate)
+	err := sonic.ConfigDefault.NewEncoder(&buf).Encode(volumeCreate)
 	assert.NilError(t, err)
 
 	ctx := context.WithValue(context.Background(), httputils.APIVersionKey{}, clusterVolumesVersion)
@@ -202,7 +202,7 @@ func TestCreateRegularVolume(t *testing.T) {
 
 	respVolume := volume.Volume{}
 
-	assert.NilError(t, json.NewDecoder(resp.Result().Body).Decode(&respVolume))
+	assert.NilError(t, sonic.ConfigDefault.NewDecoder(resp.Result().Body).Decode(&respVolume))
 
 	assert.Equal(t, respVolume.Name, "vol1")
 	assert.Equal(t, respVolume.Driver, "foodriver")
@@ -227,7 +227,7 @@ func TestCreateSwarmVolumeNoSwarm(t *testing.T) {
 	}
 
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(volumeCreate)
+	err := sonic.ConfigDefault.NewEncoder(&buf).Encode(volumeCreate)
 	assert.NilError(t, err)
 
 	ctx := context.WithValue(context.Background(), httputils.APIVersionKey{}, clusterVolumesVersion)
@@ -256,7 +256,7 @@ func TestCreateSwarmVolumeNotManager(t *testing.T) {
 	}
 
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(volumeCreate)
+	err := sonic.ConfigDefault.NewEncoder(&buf).Encode(volumeCreate)
 	assert.NilError(t, err)
 
 	ctx := context.WithValue(context.Background(), httputils.APIVersionKey{}, clusterVolumesVersion)
@@ -288,7 +288,7 @@ func TestCreateVolumeCluster(t *testing.T) {
 	}
 
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(volumeCreate)
+	err := sonic.ConfigDefault.NewEncoder(&buf).Encode(volumeCreate)
 	assert.NilError(t, err)
 
 	ctx := context.WithValue(context.Background(), httputils.APIVersionKey{}, clusterVolumesVersion)
@@ -301,7 +301,7 @@ func TestCreateVolumeCluster(t *testing.T) {
 
 	respVolume := volume.Volume{}
 
-	assert.NilError(t, json.NewDecoder(resp.Result().Body).Decode(&respVolume))
+	assert.NilError(t, sonic.ConfigDefault.NewDecoder(resp.Result().Body).Decode(&respVolume))
 
 	assert.Equal(t, respVolume.Name, "volCluster")
 	assert.Equal(t, respVolume.Driver, "someCSI")
@@ -335,7 +335,7 @@ func TestUpdateVolume(t *testing.T) {
 	}
 
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(volumeUpdate)
+	err := sonic.ConfigDefault.NewEncoder(&buf).Encode(volumeUpdate)
 	assert.NilError(t, err)
 
 	ctx := context.WithValue(context.Background(), httputils.APIVersionKey{}, clusterVolumesVersion)
@@ -364,7 +364,7 @@ func TestUpdateVolumeNoSwarm(t *testing.T) {
 	}
 
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(volumeUpdate)
+	err := sonic.ConfigDefault.NewEncoder(&buf).Encode(volumeUpdate)
 	assert.NilError(t, err)
 
 	ctx := context.WithValue(context.Background(), httputils.APIVersionKey{}, clusterVolumesVersion)
@@ -396,7 +396,7 @@ func TestUpdateVolumeNotFound(t *testing.T) {
 	}
 
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(volumeUpdate)
+	err := sonic.ConfigDefault.NewEncoder(&buf).Encode(volumeUpdate)
 	assert.NilError(t, err)
 
 	ctx := context.WithValue(context.Background(), httputils.APIVersionKey{}, clusterVolumesVersion)

@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/volume"
 	"github.com/docker/docker/errdefs"
@@ -62,7 +62,7 @@ func TestVolumeList(t *testing.T) {
 				if actualFilters != listCase.expectedFilters {
 					return nil, fmt.Errorf("filters not set in URL query properly. Expected '%s', got %s", listCase.expectedFilters, actualFilters)
 				}
-				content, err := json.Marshal(volume.ListResponse{
+				content, err := sonic.Marshal(volume.ListResponse{
 					Volumes: []*volume.Volume{
 						{
 							Name:   "volume",

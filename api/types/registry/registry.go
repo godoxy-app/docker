@@ -4,9 +4,9 @@
 package registry // import "github.com/docker/docker/api/types/registry"
 
 import (
-	"encoding/json"
 	"net"
 
+	"github.com/bytedance/sonic"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 )
 
@@ -27,17 +27,17 @@ type ServiceConfig struct {
 // in API responses.
 func (sc *ServiceConfig) MarshalJSON() ([]byte, error) {
 	type tmp ServiceConfig
-	base, err := json.Marshal((*tmp)(sc))
+	base, err := sonic.Marshal((*tmp)(sc))
 	if err != nil {
 		return nil, err
 	}
 	var merged map[string]any
-	_ = json.Unmarshal(base, &merged)
+	_ = sonic.Unmarshal(base, &merged)
 
 	for k, v := range sc.ExtraFields {
 		merged[k] = v
 	}
-	return json.Marshal(merged)
+	return sonic.Marshal(merged)
 }
 
 // NetIPNet is the net.IPNet type, which can be marshalled and
@@ -51,13 +51,13 @@ func (ipnet *NetIPNet) String() string {
 
 // MarshalJSON returns the JSON representation of the IPNet
 func (ipnet *NetIPNet) MarshalJSON() ([]byte, error) {
-	return json.Marshal((*net.IPNet)(ipnet).String())
+	return sonic.Marshal((*net.IPNet)(ipnet).String())
 }
 
 // UnmarshalJSON sets the IPNet from a byte array of JSON
 func (ipnet *NetIPNet) UnmarshalJSON(b []byte) error {
 	var ipnetStr string
-	if err := json.Unmarshal(b, &ipnetStr); err != nil {
+	if err := sonic.Unmarshal(b, &ipnetStr); err != nil {
 		return err
 	}
 	_, cidr, err := net.ParseCIDR(ipnetStr)

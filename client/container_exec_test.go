@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/errdefs"
 	"gotest.tools/v3/assert"
@@ -60,13 +60,13 @@ func TestContainerExecCreate(t *testing.T) {
 				return nil, err
 			}
 			execConfig := &container.ExecOptions{}
-			if err := json.NewDecoder(req.Body).Decode(execConfig); err != nil {
+			if err := sonic.ConfigDefault.NewDecoder(req.Body).Decode(execConfig); err != nil {
 				return nil, err
 			}
 			if execConfig.User != "user" {
 				return nil, fmt.Errorf("expected an execConfig with User == 'user', got %v", execConfig)
 			}
-			b, err := json.Marshal(container.ExecCreateResponse{
+			b, err := sonic.Marshal(container.ExecCreateResponse{
 				ID: "exec_id",
 			})
 			if err != nil {
@@ -109,7 +109,7 @@ func TestContainerExecStart(t *testing.T) {
 				return nil, err
 			}
 			options := &container.ExecStartOptions{}
-			if err := json.NewDecoder(req.Body).Decode(options); err != nil {
+			if err := sonic.ConfigDefault.NewDecoder(req.Body).Decode(options); err != nil {
 				return nil, err
 			}
 			if options.Tty || !options.Detach {
@@ -147,7 +147,7 @@ func TestContainerExecInspect(t *testing.T) {
 			if !strings.HasPrefix(req.URL.Path, expectedURL) {
 				return nil, fmt.Errorf("Expected URL '%s', got '%s'", expectedURL, req.URL)
 			}
-			b, err := json.Marshal(container.ExecInspect{
+			b, err := sonic.Marshal(container.ExecInspect{
 				ExecID:      "exec_id",
 				ContainerID: "container_id",
 			})

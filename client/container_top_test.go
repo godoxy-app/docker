@@ -3,7 +3,6 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -11,6 +10,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/errdefs"
 	"gotest.tools/v3/assert"
@@ -52,7 +52,7 @@ func TestContainerTop(t *testing.T) {
 				return nil, fmt.Errorf("args not set in URL query properly. Expected 'arg1 arg2', got %v", args)
 			}
 
-			b, err := json.Marshal(container.TopResponse{
+			b, err := sonic.Marshal(container.TopResponse{
 				Processes: [][]string{
 					{"p1", "p2"},
 					{"p3"},

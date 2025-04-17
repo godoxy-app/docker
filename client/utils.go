@@ -1,11 +1,11 @@
 package client // import "github.com/docker/docker/client"
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/url"
 	"strings"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/errdefs"
 	"github.com/docker/docker/internal/lazyregexp"
@@ -88,7 +88,7 @@ func encodePlatforms(platform ...ocispec.Platform) ([]string, error) {
 // be used for query-parameters for filtering / selecting platforms. It
 // is used as a helper for encodePlatforms,
 func encodePlatform(platform *ocispec.Platform) (string, error) {
-	p, err := json.Marshal(platform)
+	p, err := sonic.Marshal(platform)
 	if err != nil {
 		return "", errdefs.InvalidParameter(fmt.Errorf("invalid platform: %v", err))
 	}

@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/checkpoint"
 	"github.com/docker/docker/errdefs"
 	"gotest.tools/v3/assert"
@@ -33,7 +33,7 @@ func TestCheckpointList(t *testing.T) {
 			if !strings.HasPrefix(req.URL.Path, expectedURL) {
 				return nil, fmt.Errorf("Expected URL '%s', got '%s'", expectedURL, req.URL)
 			}
-			content, err := json.Marshal([]checkpoint.Summary{
+			content, err := sonic.Marshal([]checkpoint.Summary{
 				{
 					Name: "checkpoint",
 				},

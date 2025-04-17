@@ -2,9 +2,9 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
 )
@@ -28,6 +28,6 @@ func (cli *Client) PluginList(ctx context.Context, filter filters.Args) (types.P
 		return plugins, err
 	}
 
-	err = json.NewDecoder(resp.Body).Decode(&plugins)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&plugins)
 	return plugins, err
 }

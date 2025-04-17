@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/errdefs"
 	"gotest.tools/v3/assert"
@@ -74,7 +74,7 @@ func TestImageRemove(t *testing.T) {
 						return nil, fmt.Errorf("%s not set in URL query properly. Expected '%s', got %s", key, expected, actual)
 					}
 				}
-				b, err := json.Marshal([]image.DeleteResponse{
+				b, err := sonic.Marshal([]image.DeleteResponse{
 					{
 						Untagged: "image_id1",
 					},

@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/errdefs"
@@ -82,7 +82,7 @@ func TestNetworksPrune(t *testing.T) {
 					actual := query.Get(key)
 					assert.Check(t, is.Equal(expected, actual))
 				}
-				content, err := json.Marshal(network.PruneReport{
+				content, err := sonic.Marshal(network.PruneReport{
 					NetworksDeleted: []string{"network_id1", "network_id2"},
 				})
 				if err != nil {

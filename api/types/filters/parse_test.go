@@ -1,11 +1,11 @@
 package filters // import "github.com/docker/docker/api/types/filters"
 
 import (
-	"encoding/json"
 	"fmt"
 	"sort"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"gotest.tools/v3/assert"
 	is "gotest.tools/v3/assert/cmp"
 )
@@ -24,7 +24,7 @@ func TestMarshalJSON(t *testing.T) {
 }
 
 func TestMarshalJSONWithEmpty(t *testing.T) {
-	s, err := json.Marshal(NewArgs())
+	s, err := sonic.Marshal(NewArgs())
 	assert.Check(t, err)
 	const expected = `{}`
 	assert.Check(t, is.Equal(string(s), expected))

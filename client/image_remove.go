@@ -2,9 +2,9 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/image"
 )
 
@@ -26,6 +26,6 @@ func (cli *Client) ImageRemove(ctx context.Context, imageID string, options imag
 	}
 
 	var dels []image.DeleteResponse
-	err = json.NewDecoder(resp.Body).Decode(&dels)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&dels)
 	return dels, err
 }

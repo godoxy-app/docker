@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/swarm"
@@ -76,7 +76,7 @@ func TestConfigList(t *testing.T) {
 						return nil, fmt.Errorf("%s not set in URL query properly. Expected '%s', got %s", key, expected, actual)
 					}
 				}
-				content, err := json.Marshal([]swarm.Config{
+				content, err := sonic.Marshal([]swarm.Config{
 					{
 						ID: "config_id1",
 					},

@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"context"
 	"encoding/base64"
-	"encoding/json"
 	"io"
 	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/network"
@@ -24,7 +24,7 @@ func (cli *Client) ImageBuild(ctx context.Context, buildContext io.Reader, optio
 		return types.ImageBuildResponse{}, err
 	}
 
-	buf, err := json.Marshal(options.AuthConfigs)
+	buf, err := sonic.Marshal(options.AuthConfigs)
 	if err != nil {
 		return types.ImageBuildResponse{}, err
 	}
@@ -128,28 +128,28 @@ func (cli *Client) imageBuildOptionsToQuery(ctx context.Context, options types.I
 		query.Set("target", options.Target)
 	}
 	if len(options.Ulimits) != 0 {
-		ulimitsJSON, err := json.Marshal(options.Ulimits)
+		ulimitsJSON, err := sonic.Marshal(options.Ulimits)
 		if err != nil {
 			return query, err
 		}
 		query.Set("ulimits", string(ulimitsJSON))
 	}
 	if len(options.BuildArgs) != 0 {
-		buildArgsJSON, err := json.Marshal(options.BuildArgs)
+		buildArgsJSON, err := sonic.Marshal(options.BuildArgs)
 		if err != nil {
 			return query, err
 		}
 		query.Set("buildargs", string(buildArgsJSON))
 	}
 	if len(options.Labels) != 0 {
-		labelsJSON, err := json.Marshal(options.Labels)
+		labelsJSON, err := sonic.Marshal(options.Labels)
 		if err != nil {
 			return query, err
 		}
 		query.Set("labels", string(labelsJSON))
 	}
 	if len(options.CacheFrom) != 0 {
-		cacheFromJSON, err := json.Marshal(options.CacheFrom)
+		cacheFromJSON, err := sonic.Marshal(options.CacheFrom)
 		if err != nil {
 			return query, err
 		}
@@ -172,7 +172,7 @@ func (cli *Client) imageBuildOptionsToQuery(ctx context.Context, options types.I
 	}
 
 	if options.Outputs != nil {
-		outputsJSON, err := json.Marshal(options.Outputs)
+		outputsJSON, err := sonic.Marshal(options.Outputs)
 		if err != nil {
 			return query, err
 		}

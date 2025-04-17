@@ -3,9 +3,9 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"io"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/swarm"
 )
 
@@ -31,7 +31,7 @@ func (cli *Client) ConfigInspectWithRaw(ctx context.Context, id string) (swarm.C
 
 	var config swarm.Config
 	rdr := bytes.NewReader(body)
-	err = json.NewDecoder(rdr).Decode(&config)
+	err = sonic.ConfigDefault.NewDecoder(rdr).Decode(&config)
 
 	return config, body, err
 }

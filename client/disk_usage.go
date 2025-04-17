@@ -2,10 +2,10 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 )
 
@@ -26,7 +26,7 @@ func (cli *Client) DiskUsage(ctx context.Context, options types.DiskUsageOptions
 	}
 
 	var du types.DiskUsage
-	if err := json.NewDecoder(resp.Body).Decode(&du); err != nil {
+	if err := sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&du); err != nil {
 		return types.DiskUsage{}, fmt.Errorf("Error retrieving disk usage: %v", err)
 	}
 	return du, nil

@@ -3,7 +3,6 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -15,6 +14,7 @@ import (
 	"testing/iotest"
 	"time"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/errdefs"
 	"gotest.tools/v3/assert"
@@ -58,7 +58,7 @@ func TestContainerWait(t *testing.T) {
 			if !strings.HasPrefix(req.URL.Path, expectedURL) {
 				return nil, fmt.Errorf("Expected URL '%s', got '%s'", expectedURL, req.URL)
 			}
-			b, err := json.Marshal(container.WaitResponse{
+			b, err := sonic.Marshal(container.WaitResponse{
 				StatusCode: 15,
 			})
 			if err != nil {

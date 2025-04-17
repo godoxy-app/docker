@@ -1,9 +1,10 @@
 package strslice // import "github.com/docker/docker/api/types/strslice"
 
 import (
-	"encoding/json"
 	"reflect"
 	"testing"
+
+	"github.com/bytedance/sonic"
 )
 
 func TestStrSliceMarshalJSON(t *testing.T) {
@@ -17,7 +18,7 @@ func TestStrSliceMarshalJSON(t *testing.T) {
 		{StrSlice{}, "[]"},
 		{StrSlice{"/bin/sh", "-c", "echo"}, `["/bin/sh","-c","echo"]`},
 	} {
-		data, err := json.Marshal(testcase.input)
+		data, err := sonic.Marshal(testcase.input)
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -48,11 +49,11 @@ func TestStrSliceUnmarshalJSON(t *testing.T) {
 
 func TestStrSliceUnmarshalString(t *testing.T) {
 	var e StrSlice
-	echo, err := json.Marshal("echo")
+	echo, err := sonic.Marshal("echo")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := json.Unmarshal(echo, &e); err != nil {
+	if err := sonic.Unmarshal(echo, &e); err != nil {
 		t.Fatal(err)
 	}
 
@@ -67,11 +68,11 @@ func TestStrSliceUnmarshalString(t *testing.T) {
 
 func TestStrSliceUnmarshalSlice(t *testing.T) {
 	var e StrSlice
-	echo, err := json.Marshal([]string{"echo"})
+	echo, err := sonic.Marshal([]string{"echo"})
 	if err != nil {
 		t.Fatal(err)
 	}
-	if err := json.Unmarshal(echo, &e); err != nil {
+	if err := sonic.Unmarshal(echo, &e); err != nil {
 		t.Fatal(err)
 	}
 

@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/errdefs"
 	"gotest.tools/v3/assert"
@@ -42,7 +42,7 @@ func TestContainerStart(t *testing.T) {
 			// we're not expecting any payload, but if one is supplied, check it is valid.
 			if req.Header.Get("Content-Type") == "application/json" {
 				var startConfig interface{}
-				if err := json.NewDecoder(req.Body).Decode(&startConfig); err != nil {
+				if err := sonic.ConfigDefault.NewDecoder(req.Body).Decode(&startConfig); err != nil {
 					return nil, fmt.Errorf("Unable to parse json: %s", err)
 				}
 			}

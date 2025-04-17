@@ -2,9 +2,9 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/network"
 )
@@ -27,6 +27,6 @@ func (cli *Client) NetworkList(ctx context.Context, options network.ListOptions)
 	if err != nil {
 		return networkResources, err
 	}
-	err = json.NewDecoder(resp.Body).Decode(&networkResources)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&networkResources)
 	return networkResources, err
 }

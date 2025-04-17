@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/registry"
 	"github.com/docker/docker/errdefs"
@@ -83,7 +83,7 @@ func TestImageSearchWithPrivilegedFuncNoError(t *testing.T) {
 			if term != "some-image" {
 				return nil, fmt.Errorf("term not set in URL query properly. Expected 'some-image', got %s", term)
 			}
-			content, err := json.Marshal([]registry.SearchResult{
+			content, err := sonic.Marshal([]registry.SearchResult{
 				{
 					Name: "anything",
 				},
@@ -130,7 +130,7 @@ func TestImageSearchWithoutErrors(t *testing.T) {
 			if fltrs != expectedFilters {
 				return nil, fmt.Errorf("filters not set in URL query properly. Expected '%s', got %s", expectedFilters, fltrs)
 			}
-			content, err := json.Marshal([]registry.SearchResult{
+			content, err := sonic.Marshal([]registry.SearchResult{
 				{
 					Name: "anything",
 				},

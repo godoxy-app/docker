@@ -2,10 +2,10 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"net/http"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/registry"
 )
 
@@ -34,6 +34,6 @@ func (cli *Client) DistributionInspect(ctx context.Context, imageRef, encodedReg
 	}
 
 	var distributionInspect registry.DistributionInspect
-	err = json.NewDecoder(resp.Body).Decode(&distributionInspect)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&distributionInspect)
 	return distributionInspect, err
 }

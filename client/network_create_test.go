@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/errdefs"
 	"gotest.tools/v3/assert"
@@ -50,7 +50,7 @@ func TestNetworkCreate(t *testing.T) {
 				return nil, fmt.Errorf("expected POST method, got %s", req.Method)
 			}
 
-			content, err := json.Marshal(network.CreateResponse{
+			content, err := sonic.Marshal(network.CreateResponse{
 				ID:      "network_id",
 				Warning: "warning",
 			})

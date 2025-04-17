@@ -2,10 +2,10 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/image"
 	ocispec "github.com/opencontainers/image-spec/specs-go/v1"
 )
@@ -51,6 +51,6 @@ func (cli *Client) ImageHistory(ctx context.Context, imageID string, historyOpts
 	}
 
 	var history []image.HistoryResponseItem
-	err = json.NewDecoder(resp.Body).Decode(&history)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&history)
 	return history, err
 }

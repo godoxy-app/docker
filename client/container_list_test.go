@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/errdefs"
@@ -59,7 +59,7 @@ func TestContainerList(t *testing.T) {
 				return nil, fmt.Errorf("expected filters incoherent '%v' with actual filters %v", expectedFilters, fltrs)
 			}
 
-			b, err := json.Marshal([]container.Summary{
+			b, err := sonic.Marshal([]container.Summary{
 				{
 					ID: "container_id1",
 				},

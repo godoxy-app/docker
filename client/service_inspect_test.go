@@ -3,7 +3,6 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
@@ -11,6 +10,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/swarm"
 	"github.com/docker/docker/errdefs"
@@ -58,7 +58,7 @@ func TestServiceInspect(t *testing.T) {
 			if !strings.HasPrefix(req.URL.Path, expectedURL) {
 				return nil, fmt.Errorf("Expected URL '%s', got '%s'", expectedURL, req.URL)
 			}
-			content, err := json.Marshal(swarm.Service{
+			content, err := sonic.Marshal(swarm.Service{
 				ID: "service_id",
 			})
 			if err != nil {

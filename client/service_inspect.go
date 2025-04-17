@@ -3,11 +3,11 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/swarm"
 )
@@ -34,6 +34,6 @@ func (cli *Client) ServiceInspectWithRaw(ctx context.Context, serviceID string, 
 
 	var response swarm.Service
 	rdr := bytes.NewReader(body)
-	err = json.NewDecoder(rdr).Decode(&response)
+	err = sonic.ConfigDefault.NewDecoder(rdr).Decode(&response)
 	return response, body, err
 }

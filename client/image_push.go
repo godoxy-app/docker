@@ -2,13 +2,13 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/distribution/reference"
 	"github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/api/types/registry"
@@ -43,7 +43,7 @@ func (cli *Client) ImagePush(ctx context.Context, image string, options image.Pu
 		}
 
 		p := *options.Platform
-		pJson, err := json.Marshal(p)
+		pJson, err := sonic.Marshal(p)
 		if err != nil {
 			return nil, fmt.Errorf("invalid platform: %v", err)
 		}

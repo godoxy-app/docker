@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/errdefs"
 	"gotest.tools/v3/assert"
@@ -39,7 +39,7 @@ func TestDiskUsage(t *testing.T) {
 				Volumes:    nil,
 			}
 
-			b, err := json.Marshal(du)
+			b, err := sonic.Marshal(du)
 			if err != nil {
 				return nil, err
 			}

@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/checkpoint"
 	"github.com/docker/docker/errdefs"
 	"gotest.tools/v3/assert"
@@ -52,7 +52,7 @@ func TestCheckpointCreate(t *testing.T) {
 			}
 
 			createOptions := &checkpoint.CreateOptions{}
-			if err := json.NewDecoder(req.Body).Decode(createOptions); err != nil {
+			if err := sonic.ConfigDefault.NewDecoder(req.Body).Decode(createOptions); err != nil {
 				return nil, err
 			}
 

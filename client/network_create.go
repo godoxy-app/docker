@@ -2,8 +2,8 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/api/types/versions"
 )
@@ -35,6 +35,6 @@ func (cli *Client) NetworkCreate(ctx context.Context, name string, options netwo
 	}
 
 	var response network.CreateResponse
-	err = json.NewDecoder(resp.Body).Decode(&response)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&response)
 	return response, err
 }

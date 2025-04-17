@@ -2,12 +2,12 @@ package httputils // import "github.com/docker/docker/api/server/httputils"
 
 import (
 	"context"
-	"encoding/json"
 	"io"
 	"mime"
 	"net/http"
 	"strings"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/errdefs"
 	"github.com/pkg/errors"
 )
@@ -70,7 +70,7 @@ func ReadJSON(r *http.Request, out interface{}) error {
 		return nil
 	}
 
-	dec := json.NewDecoder(r.Body)
+	dec := sonic.ConfigDefault.NewDecoder(r.Body)
 	err = dec.Decode(out)
 	defer r.Body.Close()
 	if err != nil {
@@ -90,7 +90,7 @@ func ReadJSON(r *http.Request, out interface{}) error {
 func WriteJSON(w http.ResponseWriter, code int, v interface{}) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(code)
-	enc := json.NewEncoder(w)
+	enc := sonic.ConfigDefault.NewEncoder(w)
 	enc.SetEscapeHTML(false)
 	return enc.Encode(v)
 }

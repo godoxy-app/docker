@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/errdefs"
 	"gotest.tools/v3/assert"
@@ -42,7 +42,7 @@ func TestSwarmGetUnlockKey(t *testing.T) {
 				UnlockKey: unlockKey,
 			}
 
-			b, err := json.Marshal(key)
+			b, err := sonic.Marshal(key)
 			if err != nil {
 				return nil, err
 			}

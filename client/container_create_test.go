@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/errdefs"
 	"gotest.tools/v3/assert"
@@ -50,7 +50,7 @@ func TestContainerCreateWithName(t *testing.T) {
 			if name != "container_name" {
 				return nil, fmt.Errorf("container name not set in URL query properly. Expected `container_name`, got %s", name)
 			}
-			b, err := json.Marshal(container.CreateResponse{
+			b, err := sonic.Marshal(container.CreateResponse{
 				ID: "container_id",
 			})
 			if err != nil {
@@ -79,13 +79,13 @@ func TestContainerCreateAutoRemove(t *testing.T) {
 		return func(req *http.Request) (*http.Response, error) {
 			var config container.CreateRequest
 
-			if err := json.NewDecoder(req.Body).Decode(&config); err != nil {
+			if err := sonic.ConfigDefault.NewDecoder(req.Body).Decode(&config); err != nil {
 				return nil, err
 			}
 			if config.HostConfig.AutoRemove != expectedValue {
 				return nil, fmt.Errorf("expected AutoRemove to be %v, got %v", expectedValue, config.HostConfig.AutoRemove)
 			}
-			b, err := json.Marshal(container.CreateResponse{
+			b, err := sonic.Marshal(container.CreateResponse{
 				ID: "container_id",
 			})
 			if err != nil {
@@ -151,13 +151,13 @@ func TestContainerCreateCapabilities(t *testing.T) {
 		client: newMockClient(func(req *http.Request) (*http.Response, error) {
 			var config container.CreateRequest
 
-			if err := json.NewDecoder(req.Body).Decode(&config); err != nil {
+			if err := sonic.ConfigDefault.NewDecoder(req.Body).Decode(&config); err != nil {
 				return nil, err
 			}
 			assert.Check(t, is.DeepEqual([]string(config.HostConfig.CapAdd), expectedCaps))
 			assert.Check(t, is.DeepEqual([]string(config.HostConfig.CapDrop), expectedCaps))
 
-			b, err := json.Marshal(container.CreateResponse{
+			b, err := sonic.Marshal(container.CreateResponse{
 				ID: "container_id",
 			})
 			if err != nil {

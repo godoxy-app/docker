@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/errdefs"
 	"gotest.tools/v3/assert"
@@ -41,7 +41,7 @@ func TestContainerUpdate(t *testing.T) {
 				return nil, fmt.Errorf("Expected URL '%s', got '%s'", expectedURL, req.URL)
 			}
 
-			b, err := json.Marshal(container.UpdateResponse{})
+			b, err := sonic.Marshal(container.UpdateResponse{})
 			if err != nil {
 				return nil, err
 			}

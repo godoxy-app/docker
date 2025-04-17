@@ -2,9 +2,9 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/volume"
 )
@@ -27,7 +27,7 @@ func (cli *Client) VolumesPrune(ctx context.Context, pruneFilters filters.Args) 
 	}
 
 	var report volume.PruneReport
-	if err := json.NewDecoder(resp.Body).Decode(&report); err != nil {
+	if err := sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&report); err != nil {
 		return volume.PruneReport{}, fmt.Errorf("Error retrieving volume prune report: %v", err)
 	}
 

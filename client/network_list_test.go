@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/network"
 	"github.com/docker/docker/errdefs"
@@ -74,7 +74,7 @@ func TestNetworkList(t *testing.T) {
 				if actualFilters != listCase.expectedFilters {
 					return nil, fmt.Errorf("filters not set in URL query properly. Expected '%s', got %s", listCase.expectedFilters, actualFilters)
 				}
-				content, err := json.Marshal([]network.Summary{
+				content, err := sonic.Marshal([]network.Summary{
 					{
 						Name:   "network",
 						Driver: "bridge",

@@ -5,10 +5,10 @@ import (
 	"compress/gzip"
 	"context"
 	"encoding/base64"
-	"encoding/json"
 	"io"
 	"net/http"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/server/httputils"
 	"github.com/docker/docker/api/types/container"
 	gddohttputil "github.com/golang/gddo/httputil"
@@ -16,7 +16,7 @@ import (
 
 // setContainerPathStatHeader encodes the stat to JSON, base64 encode, and place in a header.
 func setContainerPathStatHeader(stat *container.PathStat, header http.Header) error {
-	statJSON, err := json.Marshal(stat)
+	statJSON, err := sonic.Marshal(stat)
 	if err != nil {
 		return err
 	}

@@ -2,10 +2,10 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"net/url"
 	"strconv"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/filters"
 )
@@ -51,7 +51,7 @@ func (cli *Client) ContainerList(ctx context.Context, options container.ListOpti
 	}
 
 	var containers []container.SummaryTrimmed
-	err = json.NewDecoder(resp.Body).Decode(&containers)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&containers)
 	if err != nil {
 		return nil, err
 	}

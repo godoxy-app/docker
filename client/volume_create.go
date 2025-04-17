@@ -2,8 +2,8 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/volume"
 )
 
@@ -16,6 +16,6 @@ func (cli *Client) VolumeCreate(ctx context.Context, options volume.CreateOption
 	}
 
 	var vol volume.Volume
-	err = json.NewDecoder(resp.Body).Decode(&vol)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&vol)
 	return vol, err
 }

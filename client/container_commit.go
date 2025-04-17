@@ -2,10 +2,10 @@ package client // import "github.com/docker/docker/client"
 
 import (
 	"context"
-	"encoding/json"
 	"errors"
 	"net/url"
 
+	"github.com/bytedance/sonic"
 	"github.com/distribution/reference"
 	"github.com/docker/docker/api/types/container"
 )
@@ -55,6 +55,6 @@ func (cli *Client) ContainerCommit(ctx context.Context, containerID string, opti
 		return response, err
 	}
 
-	err = json.NewDecoder(resp.Body).Decode(&response)
+	err = sonic.ConfigDefault.NewDecoder(resp.Body).Decode(&response)
 	return response, err
 }

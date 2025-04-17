@@ -3,7 +3,6 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
@@ -11,6 +10,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types/filters"
 	"github.com/docker/docker/api/types/image"
 	"github.com/docker/docker/errdefs"
@@ -92,7 +92,7 @@ func TestImageList(t *testing.T) {
 						return nil, fmt.Errorf("%s not set in URL query properly. Expected '%s', got %s", key, expected, actual)
 					}
 				}
-				content, err := json.Marshal([]image.Summary{
+				content, err := sonic.Marshal([]image.Summary{
 					{
 						ID: "image_id2",
 					},
@@ -133,7 +133,7 @@ func TestImageListApiBefore125(t *testing.T) {
 			if actualFilters != "" {
 				return nil, fmt.Errorf("filters should have not been present, were with value: %s", actualFilters)
 			}
-			content, err := json.Marshal([]image.Summary{
+			content, err := sonic.Marshal([]image.Summary{
 				{
 					ID: "image_id2",
 				},

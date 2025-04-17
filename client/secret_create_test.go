@@ -3,13 +3,13 @@ package client // import "github.com/docker/docker/client"
 import (
 	"bytes"
 	"context"
-	"encoding/json"
 	"fmt"
 	"io"
 	"net/http"
 	"strings"
 	"testing"
 
+	"github.com/bytedance/sonic"
 	"github.com/docker/docker/api/types"
 	"github.com/docker/docker/api/types/swarm"
 	"github.com/docker/docker/errdefs"
@@ -46,7 +46,7 @@ func TestSecretCreate(t *testing.T) {
 			if req.Method != http.MethodPost {
 				return nil, fmt.Errorf("expected POST method, got %s", req.Method)
 			}
-			b, err := json.Marshal(types.SecretCreateResponse{
+			b, err := sonic.Marshal(types.SecretCreateResponse{
 				ID: "test_secret",
 			})
 			if err != nil {
