@@ -7,7 +7,7 @@ type (
 		Image      string
 		Ports      []Port
 		Labels     map[string]string
-		State      string
+		State      ContainerState
 		Status     string
 		HostConfig struct {
 			NetworkMode string `json:",omitempty"`
